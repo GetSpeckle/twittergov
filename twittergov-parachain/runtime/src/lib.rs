@@ -56,7 +56,8 @@ pub type BlockNumber = u64;
 pub type Nonce = u64;
 
 /// Used for the module template in `./voting.rs`
-mod voting;
+pub mod voting;
+pub use voting::{StatusType, Proposal};
 
 /// Opaque types. These are used by the CLI to instantiate machinery that don't need to know
 /// the specifics of the runtime. They can then be made to be agnostic over specific formats
@@ -92,8 +93,8 @@ pub mod opaque {
 
 /// This runtime version.
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-	spec_name: create_runtime_str!("voting"),
-	impl_name: create_runtime_str!("voting"),
+	spec_name: create_runtime_str!("twittergov-parachain"),
+	impl_name: create_runtime_str!("twittergov-parachain"),
 	authoring_version: 3,
 	spec_version: 4,
 	impl_version: 4,
@@ -192,11 +193,6 @@ impl voting::Trait for Runtime {
 	type Event = Event;
 }
 
-/// Used for the module template in `./template.rs`
-impl substrate_module_template::Trait for Runtime {
-	type Event = Event;
-}
-
 construct_runtime!(
 	pub enum Runtime with Log(InternalLog: DigestItem<Hash, AuthorityId, AuthoritySignature>) where
 		Block = Block,
@@ -210,9 +206,7 @@ construct_runtime!(
 		Indices: indices,
 		Balances: balances,
 		Sudo: sudo,
-		// Used for the module template in `./template.rs`
-		VotingModule: voting::{Module, Call, Storage, Event<T>},
-		ExampleModule: substrate_module_template::{Module, Call, Storage, Event<T>},
+		DaoModule: voting::{Module, Call, Storage, Event<T>},
 	}
 );
 
